@@ -30,6 +30,7 @@ public:
 				break;
 			case 1:
 				{
+					youLose(scrn);
 					mhero.Damaged();
 				}
 				break;
@@ -57,6 +58,7 @@ public:
 				break;
 			case 1:
 				{
+					youLose(scrn);
 					mhero.Damaged();
 				}
 				break;
@@ -84,6 +86,7 @@ public:
 				break;
 		case 1:
 			{
+				youLose(scrn);
 				mhero.Damaged();
 				break;
 			}
@@ -111,7 +114,8 @@ public:
 			break;
 		case 1:
 			{
-					mhero.Damaged();
+				youLose(scrn);
+				mhero.Damaged();
 			}
 			break;
 		case 2:

@@ -23,6 +23,7 @@ public:
 		
 		if ( scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 3 )
 		{
+			youLose(scrn);
 			Damaged();
 		}
 		else
@@ -43,6 +44,7 @@ public:
 	{
 		if ( scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 3 )
 		{
+			youLose(scrn);
 			Damaged();
 		}
 		else
@@ -65,6 +67,7 @@ public:
 	{
 		if ( scrn.arr[calculateIndex(b - step)][calculateIndex (l)] == 3 )
 		{
+			youLose(scrn);
 			Damaged();
 		}
 		else
@@ -87,6 +90,7 @@ public:
 	{
 		if ( scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 3 )
 		{
+			youLose(scrn);
 			Damaged();
 		}
 		else

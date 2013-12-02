@@ -32,20 +32,24 @@ public:
 
 	void clearScreen()
 	{
-		for (int i = 2; i < 12; i++)
+		for (int i = 0; i < 12; i++)
+		{
 			for ( int j=0; j<14; j++)
 				arr[i][j] = 0;
+		}
 		
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 13; i++)
 			arr[i][0] = 4;
 		
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 13; i++)
 			arr[i][14] = 4;
 		
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 15; i++)
 			arr[0][i] = 4;
-		for (int i = 0; i < 12; i++)
+
+		for (int i = 0; i < 15; i++)
 			arr[12][i] = 4;
+
 		run = true;
 	}
 
@@ -53,9 +57,23 @@ public:
 	{
 		clearScreen();
 	}
-
+	void print()
+	{
+		for (int i = 0; i < 13; i++)
+		{
+			for ( int j=0; j<15; j++)
+				std::cout<<arr[i][j]<<" ";
+			std::cout<<" "<<std::endl;
+		}
+	}
 	void Draw(int w, int h, unsigned int texture)
 	{
 	}
 };
+
+int youLose(screen& scrn)
+{
+	scrn.run = false;
+	return 0;
+}
 #endif

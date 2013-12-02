@@ -99,10 +99,10 @@ void createLevel ()
 			}
 		}
 		cout<<"I created level"<<endl;
-		//lvlup = portal (10, 50, 10, 50, scrn);
+		lvlup = portal (10, 50, 410, 450, scrn);
 		Main = hero (scrn);
-		cout<<bricks.size();
 }
+
 
 void levelUp()
 {
@@ -218,6 +218,20 @@ void bomb::damage()
 		}
 	}
 }
+
+list <list<bomb>::iterator> lst_iter;
+
+void youWin (sf::Text & txt,sf::Font & font)
+{
+	txt.setFont(font); // font is a sf::Font
+
+				// set the string to display
+	txt.setString("You Win");
+	txt.setColor(sf::Color::Black);
+	txt.setPosition(100,100);
+	txt.setCharacterSize(72);
+}
+
 int main ( int argc, char** argv)
 {
 
@@ -227,7 +241,6 @@ int main ( int argc, char** argv)
 	
 
 	createLevel();
-	NUM_LVL=0;
 
 	sf::Texture texMainHero;
 	texMainHero.loadFromFile("main_hero.png");
@@ -249,6 +262,19 @@ int main ( int argc, char** argv)
 	sf::Sprite sprBomb;
 	sprBomb.setTexture(texBomb);
 
+	sf::Texture texPortal;
+	texPortal.loadFromFile("portal.png");
+	sf::Sprite sprPortal;
+	sprPortal.setTexture(texPortal);
+
+	sf::Font font;
+	if (!font.loadFromFile("font.ttf"))
+	{
+		return 3;
+   	}
+
+	bool lvl_is_completed = false;
+
 	while (true/*window.isOpen()*/)
     {
      
@@ -261,9 +287,9 @@ int main ( int argc, char** argv)
 			case sf::Event::Closed:
 				window.close();
 				break;
+			//========================================================================================= Keyboard
 			case sf::Event::KeyPressed:
 				{
-					std::cout<<"i'm here!"<<std::endl;
 					switch (event.key.code)
 					{
 					case (sf::Keyboard::Left):
@@ -271,7 +297,6 @@ int main ( int argc, char** argv)
 						break;
 					case (sf::Keyboard::Right):
 						Main.MoveR(scrn, lvlup);
-						std::cout<<"i'm in right!"<<endl;
 						break;
 					case (sf::Keyboard::Up):
 						Main.MoveU(scrn, lvlup);
@@ -279,16 +304,33 @@ int main ( int argc, char** argv)
 					case (sf::Keyboard::Down):
 						Main.MoveD(scrn, lvlup);
 						break;
+					case (sf::Keyboard::Space):
+						bombs.push_back(bomb (Main.l, Main.r, Main.b, Main.t));
+						break;
+					case (sf::Keyboard::E):
+						{
+							scrn.print();
+						}
+						break;
+					case (sf::Keyboard::A):
+					{
+						//NUM_LVL++;
+						enemies.clear();
 					}
-				break;
+					break;
+
+					}
+					break;
 				}
-			}
-			//------------------------------
-		
-        }
+			}//end of switch 
+		}
 			window.clear(sf::Color::White);
-			if (scrn.run)
+
+			if (scrn.run == true)
 			{
+				sprPortal.setPosition(sf::Vector2f(lvlup.l, lvlup.b));
+				window.draw(sprPortal);
+
 				if (! bricks.empty())
 				{
 					for (list<brick>::iterator i = bricks.begin(); i != bricks.end(); ++i)
@@ -299,25 +341,56 @@ int main ( int argc, char** argv)
 				}
 				if (! enemies.empty())
 				{
-					for (list<enemy>::iterator i = enemies.begin(); i != enemies.end(); ++i)
+
+					sf::Time elapsed1 = clock.getElapsedTime();
+
+					if (elapsed1.asSeconds() >= 0.5f)
 					{
-						sprEnemy.setPosition(sf::Vector2f(i->l, i->b));
-						window.draw(sprEnemy);
+						for (list<enemy>::iterator i = enemies.begin(); i != enemies.end(); ++i)
+						{
+							
+							i->motion(scrn, Main);
+						}
+					sf::Time elapsed1 = clock.restart();
+					}
+					for (list<enemy>::iterator i = enemies.begin(); i != enemies.end(); ++i)
+					{	
+							sprEnemy.setPosition(sf::Vector2f(i->l, i->b));
+							window.draw(sprEnemy);
 					}
 				}
 				if ( !bombs.empty())
 				{
+					std::cout<<bombs.size()<<endl;
 					for (list<bomb>::iterator i = bombs.begin(); i != bombs.end(); ++i)
 					{
 						sprBomb.setPosition(sf::Vector2f(i->l, i->b));
+
+						if ( (i->clock).getElapsedTime().asSeconds() >= 3.0)
+						{
+							i->damage();
+							lst_iter.push_back(i);
+						}
 						window.draw(sprBomb);
 					}
 				}
-	
+				sprMainHero.setPosition(sf::Vector2f(Main.l, Main.b));
+				window.draw(sprMainHero);
+
 				if ( enemies.empty() && Main.b == lvlup.b && Main.r ==lvlup.r)
 				{
-					levelUp();
+					if( NUM_LVL<= 2)
+					{
+						levelUp();
+					}
+					else
+					{
+						std::cout<<"I'm in else "<<std::endl;
+						scrn.run = false; 
+						std::cout<<scrn.run;
+					}
 				}
+				std::cout<<scrn.run;
 			}
 			else
 			{
@@ -325,13 +398,41 @@ int main ( int argc, char** argv)
 				bombs.clear();
 				enemies.clear();
 				scrn.clearScreen();
+				scrn.run = false;
+
+				sf::Text text;
+
+				if(NUM_LVL > 2)
+				{
+					std::cout<<"NUM_LVL > 2"<<std::endl;
+					youWin(text, font);
+					window.draw(text);
+				}
+				else
+				{
+					text.setFont(font);
+
+					text.setString("You lose");
+					text.setColor(sf::Color::Black);
+					text.setPosition(100,100);
+					text.setCharacterSize(72); // in pixels, not points!
+					window.draw(text);
+				}
 			}
 
-			sprMainHero.setPosition(sf::Vector2f(Main.l, Main.b));
-			window.draw(sprMainHero);
 			window.display();
+			//std::cout<<bombs.size();
+			if ( bombs.size() != 0)
+			{ 
+				std::cout<<bombs.size();
+				for (list<list<bomb>::iterator>::iterator i = lst_iter.begin(); i != lst_iter.end(); ++i)
+				{
+					bombs.remove( *(*i));
+				}
+				lst_iter.clear();
+			}
+
     }//while (window.isOpen())
 
     return 0;
-
 }
