@@ -78,6 +78,7 @@ void createLevel ()
         scrn.clearScreen();
 		bricks.clear();
 		enemies.clear();
+		bombs.clear();
 
 		for (int i = 0; i < 13; i++)
 		{
@@ -109,6 +110,12 @@ void levelUp()
 	++NUM_LVL;
 	createLevel();
 }
+void startNewGame()
+{
+	NUM_LVL = 0;
+	createLevel();
+}
+
 /*
 void boom (int);
 void enemyMotion(int);
@@ -238,6 +245,7 @@ void eventsInMenu (sf::Event &event, sf::RenderWindow &window, bool & in_menu, i
 				if ( mPos.x >= txt1_x && mPos.x <= (txt1_x+100) && mPos.y >= txt1_y && mPos.y <= (txt1_y+100) )
 				{
 					in_menu = false;
+					startNewGame();
 				}
 
 				if ( mPos.x >= txt2_x && mPos.x <= (txt2_x+100) && mPos.y >= txt2_y && mPos.y <= (txt2_y+100) )
@@ -250,6 +258,74 @@ void eventsInMenu (sf::Event &event, sf::RenderWindow &window, bool & in_menu, i
 	}
 }
 
+void eventsInGame(sf::Event &event, sf::RenderWindow &window)
+{
+	switch (event.type)
+	{
+	case sf::Event::Closed:
+		{
+			window.close();
+		}
+		break;
+	//========================================================================================= Keyboard
+	case sf::Event::KeyPressed:
+		{
+			switch (event.key.code)
+			{
+			case (sf::Keyboard::Left):
+				Main.MoveL(scrn, lvlup);
+				break;
+			case (sf::Keyboard::Right):
+				Main.MoveR(scrn, lvlup);
+				break;
+			case (sf::Keyboard::Up):
+				Main.MoveU(scrn, lvlup);
+				break;
+			case (sf::Keyboard::Down):
+				Main.MoveD(scrn, lvlup);
+				break;
+			case (sf::Keyboard::Space):
+				bombs.push_back(bomb (Main.l, Main.r, Main.b, Main.t));
+				break;
+			case (sf::Keyboard::E):
+			{
+				scrn.print();
+			}
+			break;
+			case (sf::Keyboard::A):
+			{
+				//NUM_LVL++;
+				enemies.clear();
+			}
+			break;
+			}
+		}
+	}
+}
+
+void eventsAfterLosing(sf::Event &event, sf::RenderWindow &window, bool &in_menu)
+{
+	switch(event.type)
+	{
+	case sf::Event::MouseButtonPressed:
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				sf::Vector2i mPos = sf::Mouse::getPosition(window);
+				if ( mPos.x >= 100 && mPos.x <= 200 && mPos.y >= 250 && mPos.y <= 350 )
+				{
+					scrn.run = true;
+					in_menu = true;
+				}
+
+				if ( mPos.x >= 250 && mPos.x <= 350 && mPos.y >= 250 && mPos.y <= 300 )
+				{
+					window.close();
+				}
+			}
+		}
+	}
+}
 void getText(sf::Text & txt, sf::Font & font,char* str, int x, int y, int size)
 {
 	txt.setFont(font); 
@@ -259,7 +335,7 @@ void getText(sf::Text & txt, sf::Font & font,char* str, int x, int y, int size)
 	txt.setCharacterSize(size);
 }
 
-void youWin (sf::Text & txt,sf::Font & font)
+void youWin (sf::Text & txt, sf::Font & font)
 {
 	txt.setFont(font); // font is a sf::Font
 
@@ -274,12 +350,10 @@ int main ( int argc, char** argv)
 {
 
 	sf::RenderWindow window(sf::VideoMode(wW, wH), "SFML works!", sf::Style::Titlebar);
-	
-	sf::Clock clock; // starts the clock
-	
 
-	createLevel();
+	sf::Clock clock;
 
+	//==================================================================================================== Textures for objects
 	sf::Texture texMainHero;
 	texMainHero.loadFromFile("main_hero.png");
 	sf::Sprite sprMainHero;
@@ -343,116 +417,32 @@ int main ( int argc, char** argv)
 			window.draw(txt2);
 
 			window.display();
-			while ( window.pollEvent(event) )
+			while ( window.pollEvent(event))
 			{
-				evInMenu( event, window, in_menu, txt1_x, txt1_y, txt2_x, txt2_y);
-
-				/*
-				switch(event.type)
-				{
-				case sf::Event::Closed:
-					{
-						window.close();
-					}
-					break;
-				case sf::Event::MouseButtonPressed:
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-						{
-							sf::Vector2i mPos = sf::Mouse::getPosition(window);
-							if ( mPos.x >= txt1_x && mPos.x <= (txt1_x+100) && mPos.y >= txt1_y && mPos.y <= (txt1_y+100) )
-							{
-								in_menu = false;
-							}
-
-							if ( mPos.x >= txt2_x && mPos.x <= (txt2_x+100) && mPos.y >= txt2_y && mPos.y <= (txt2_y+100) )
-							{
-								window.close();
-							}
-						}
-					}
-					break;
-
-				}
-				*/
+				eventsInMenu( event, window, in_menu, txt1_x, txt1_y, txt2_x, txt2_y);
 			}
 			
 		}
-		bool lose = false;
+
 		while ( window.pollEvent(event) )
 		{
-			//std::cout<<"I OUTTA WHILE!!"<<std::cout;
-			switch (event.type)
+			if(scrn.run)
 			{
-				if (!lose)
-				{
-			case sf::Event::Closed:
-				{
-					window.close();
-				}
-				break;
-				//========================================================================================= Keyboard
-			case sf::Event::KeyPressed:
-				{
-					switch (event.key.code)
-					{
-					case (sf::Keyboard::Left):
-						Main.MoveL(scrn, lvlup);
-						break;
-					case (sf::Keyboard::Right):
-						Main.MoveR(scrn, lvlup);
-						break;
-					case (sf::Keyboard::Up):
-						Main.MoveU(scrn, lvlup);
-						break;
-					case (sf::Keyboard::Down):
-						Main.MoveD(scrn, lvlup);
-						break;
-					case (sf::Keyboard::Space):
-						bombs.push_back(bomb (Main.l, Main.r, Main.b, Main.t));
-						break;
-					case (sf::Keyboard::E):
-						{
-							scrn.print();
-						}
-						break;
-					case (sf::Keyboard::A):
-						{
-							//NUM_LVL++;
-							enemies.clear();
-						}
-						break;
-					}//switch (event.key.code)
-				}
-				}
-				else
-				{
-				case sf::Event::MouseButtonPressed:
-					{
-						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-						{
-							sf::Vector2i mPos = sf::Mouse::getPosition(window);
-							if ( mPos.x >= 100 && mPos.x <= 200 && mPos.y >= 250 && mPos.y <= 350 )
-							{
-								in_menu = true;
-							}
-
-							if ( mPos.x >= 250 && mPos.x <= 350 && mPos.y >= 250 && mPos.y <= 300 )
-							{
-								window.close();
-							}
-						}
-					}
-				}
+				eventsInGame(event, window);
 			}
-
-			//--------------------------------------------------------------------------------------------------------------------Draw
-			window.clear(sf::Color::White);
-			std::cout<<"I gonna draw"<<std::endl;
-			if (scrn.run == true)
+			else
 			{
-				sprPortal.setPosition(sf::Vector2f(lvlup.l, lvlup.b));
-				window.draw(sprPortal);
+				eventsAfterLosing(event, window, in_menu);
+			}
+		}
+
+		//--------------------------------------------------------------------------------------------------------------------Draw
+		window.clear(sf::Color::White);
+
+		if (scrn.run == true)
+		{
+			sprPortal.setPosition(sf::Vector2f(lvlup.l, lvlup.b));
+			window.draw(sprPortal);
 
 				if (! bricks.empty())
 				{
@@ -508,12 +498,9 @@ int main ( int argc, char** argv)
 					}
 					else
 					{
-						std::cout<<"I'm in else "<<std::endl;
 						scrn.run = false; 
-						std::cout<<scrn.run;
 					}
 				}
-				std::cout<<scrn.run;
 			}
 			else
 			{
@@ -533,7 +520,6 @@ int main ( int argc, char** argv)
 				}
 				else
 				{
-					lose = true;
 					sf::Text txt1, txt2, txt3, txt4;
 
 					getText(txt1, font, "You lose", 100, 50, 72);
@@ -551,7 +537,7 @@ int main ( int argc, char** argv)
 			}
 
 			window.display();
-			//std::cout<<bombs.size();
+			
 			if ( bombs.size() != 0)
 			{ 
 				std::cout<<bombs.size();
@@ -561,8 +547,7 @@ int main ( int argc, char** argv)
 				}
 				lst_iter.clear();
 			}
-		}
-	}//while (window.isOpen())
+	} //while (window.isOpen())
 
     return 0;
 }
