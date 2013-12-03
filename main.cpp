@@ -221,12 +221,50 @@ void bomb::damage()
 
 list <list<bomb>::iterator> lst_iter;
 
+void eventsInMenu (sf::Event &event, sf::RenderWindow &window, bool & in_menu, int txt1_x,int txt1_y, int txt2_x, int txt2_y)
+{
+	switch(event.type)
+	{
+		case sf::Event::Closed:
+		{
+			window.close();
+		}
+		break;
+		case sf::Event::MouseButtonPressed:
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				sf::Vector2i mPos = sf::Mouse::getPosition(window);
+				if ( mPos.x >= txt1_x && mPos.x <= (txt1_x+100) && mPos.y >= txt1_y && mPos.y <= (txt1_y+100) )
+				{
+					in_menu = false;
+				}
+
+				if ( mPos.x >= txt2_x && mPos.x <= (txt2_x+100) && mPos.y >= txt2_y && mPos.y <= (txt2_y+100) )
+				{
+					window.close();
+				}
+			}
+		}
+		break;
+	}
+}
+
+void getText(sf::Text & txt, sf::Font & font,char* str, int x, int y, int size)
+{
+	txt.setFont(font); 
+	txt.setString(str);
+	txt.setColor(sf::Color::Black);
+	txt.setPosition(x,y);
+	txt.setCharacterSize(size);
+}
+
 void youWin (sf::Text & txt,sf::Font & font)
 {
 	txt.setFont(font); // font is a sf::Font
 
 				// set the string to display
-	txt.setString("You Win");
+	txt.setString("You win !!!");
 	txt.setColor(sf::Color::Black);
 	txt.setPosition(100,100);
 	txt.setCharacterSize(72);
@@ -235,7 +273,7 @@ void youWin (sf::Text & txt,sf::Font & font)
 int main ( int argc, char** argv)
 {
 
-	sf::RenderWindow window(sf::VideoMode(wW, wH), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(wW, wH), "SFML works!", sf::Style::Titlebar);
 	
 	sf::Clock clock; // starts the clock
 	
@@ -272,22 +310,88 @@ int main ( int argc, char** argv)
 	{
 		return 3;
    	}
-
+	//-----------------------------------------------------------------------------------------------Boolean variables	
 	bool lvl_is_completed = false;
+	bool in_menu = true;
 
-	while (true/*window.isOpen()*/)
+	// -----------------------------------------------------------------------------------------------Game
+	while (window.isOpen())
     {
-     
 		sf::Event event;
 
-        while (window.pollEvent(event))
-        {
-			switch(event.type)
+		while ( in_menu)
+		{
+			window.clear(sf::Color::White);
+			//std::cout<<"I'm here!"<<std::endl;
+
+			sf::Text txt1, txt2;
+			const int txt1_x = 100, txt1_y=100;
+
+			txt1.setFont(font);
+			txt1.setString("Start game");
+			txt1.setColor(sf::Color::Black);
+			txt1.setPosition(txt1_x, txt1_y);
+			txt1.setCharacterSize(72);
+			window.draw(txt1);
+
+			const int txt2_x = 100, txt2_y=180;
+			txt2.setFont(font);
+			txt2.setString("Exit");
+			txt2.setColor(sf::Color::Black);
+			txt2.setPosition(txt2_x,txt2_y);
+			txt2.setCharacterSize(72);
+			window.draw(txt2);
+
+			window.display();
+			while ( window.pollEvent(event) )
 			{
+				evInMenu( event, window, in_menu, txt1_x, txt1_y, txt2_x, txt2_y);
+
+				/*
+				switch(event.type)
+				{
+				case sf::Event::Closed:
+					{
+						window.close();
+					}
+					break;
+				case sf::Event::MouseButtonPressed:
+					{
+						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+						{
+							sf::Vector2i mPos = sf::Mouse::getPosition(window);
+							if ( mPos.x >= txt1_x && mPos.x <= (txt1_x+100) && mPos.y >= txt1_y && mPos.y <= (txt1_y+100) )
+							{
+								in_menu = false;
+							}
+
+							if ( mPos.x >= txt2_x && mPos.x <= (txt2_x+100) && mPos.y >= txt2_y && mPos.y <= (txt2_y+100) )
+							{
+								window.close();
+							}
+						}
+					}
+					break;
+
+				}
+				*/
+			}
+			
+		}
+		bool lose = false;
+		while ( window.pollEvent(event) )
+		{
+			//std::cout<<"I OUTTA WHILE!!"<<std::cout;
+			switch (event.type)
+			{
+				if (!lose)
+				{
 			case sf::Event::Closed:
-				window.close();
+				{
+					window.close();
+				}
 				break;
-			//========================================================================================= Keyboard
+				//========================================================================================= Keyboard
 			case sf::Event::KeyPressed:
 				{
 					switch (event.key.code)
@@ -313,19 +417,38 @@ int main ( int argc, char** argv)
 						}
 						break;
 					case (sf::Keyboard::A):
-					{
-						//NUM_LVL++;
-						enemies.clear();
-					}
-					break;
-
-					}
-					break;
+						{
+							//NUM_LVL++;
+							enemies.clear();
+						}
+						break;
+					}//switch (event.key.code)
 				}
-			}//end of switch 
-		}
-			window.clear(sf::Color::White);
+				}
+				else
+				{
+				case sf::Event::MouseButtonPressed:
+					{
+						if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+						{
+							sf::Vector2i mPos = sf::Mouse::getPosition(window);
+							if ( mPos.x >= 100 && mPos.x <= 200 && mPos.y >= 250 && mPos.y <= 350 )
+							{
+								in_menu = true;
+							}
 
+							if ( mPos.x >= 250 && mPos.x <= 350 && mPos.y >= 250 && mPos.y <= 300 )
+							{
+								window.close();
+							}
+						}
+					}
+				}
+			}
+
+			//--------------------------------------------------------------------------------------------------------------------Draw
+			window.clear(sf::Color::White);
+			std::cout<<"I gonna draw"<<std::endl;
 			if (scrn.run == true)
 			{
 				sprPortal.setPosition(sf::Vector2f(lvlup.l, lvlup.b));
@@ -348,15 +471,15 @@ int main ( int argc, char** argv)
 					{
 						for (list<enemy>::iterator i = enemies.begin(); i != enemies.end(); ++i)
 						{
-							
+
 							i->motion(scrn, Main);
 						}
-					sf::Time elapsed1 = clock.restart();
+						sf::Time elapsed1 = clock.restart();
 					}
 					for (list<enemy>::iterator i = enemies.begin(); i != enemies.end(); ++i)
 					{	
-							sprEnemy.setPosition(sf::Vector2f(i->l, i->b));
-							window.draw(sprEnemy);
+						sprEnemy.setPosition(sf::Vector2f(i->l, i->b));
+						window.draw(sprEnemy);
 					}
 				}
 				if ( !bombs.empty())
@@ -410,13 +533,20 @@ int main ( int argc, char** argv)
 				}
 				else
 				{
-					text.setFont(font);
+					lose = true;
+					sf::Text txt1, txt2, txt3, txt4;
 
-					text.setString("You lose");
-					text.setColor(sf::Color::Black);
-					text.setPosition(100,100);
-					text.setCharacterSize(72); // in pixels, not points!
-					window.draw(text);
+					getText(txt1, font, "You lose", 100, 50, 72);
+					window.draw(txt1);
+
+					getText(txt2, font, "Try again?", 100, 150, 72);
+					window.draw(txt2);
+
+					getText(txt3, font, "Yes", 100, 250, 72);
+					window.draw(txt3);
+
+					getText(txt4, font, "No", 250, 250, 72);
+					window.draw(txt4);
 				}
 			}
 
@@ -431,8 +561,8 @@ int main ( int argc, char** argv)
 				}
 				lst_iter.clear();
 			}
-
-    }//while (window.isOpen())
+		}
+	}//while (window.isOpen())
 
     return 0;
 }
