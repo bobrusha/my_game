@@ -8,24 +8,23 @@ class enemy
 {
 public: 
 	int l, r, b, t, dir;
-	sf::Sprite sprite;
 	enemy(): l (170), r(210), b(170), t(210), dir(0) {}
 	enemy( int _l, int _r, int _b, int _t, screen& scrn): l (_l), r(_r), b(_b), t(_t), dir(0) 
 	{
-		scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+		scrn.setArrayElement(3, calculateIndex(b),calculateIndex (l));
 	}
 	enemy( enemy* x): l (x->l), r(x->r), b(x->b), t(x->t), dir(x->dir) {}
 	
 	void MoveL (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr[calculateIndex(b)][calculateIndex (l - step)])
+		switch (scrn.getArrayElement(calculateIndex(b), calculateIndex (l - step)) )
 		{
 			case 0:
 				{
-					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+					scrn.setArrayElement( 0, calculateIndex(b), calculateIndex (l));
 					l -= step;
 					r -= step;
-					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+					scrn.setArrayElement(3, calculateIndex(b), calculateIndex (l));
 				}
 				break;
 			case 1:
@@ -46,14 +45,14 @@ public:
 	}
 	void MoveR (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr [calculateIndex(b)][calculateIndex (l + step)])
+		switch (scrn.getArrayElement(calculateIndex(b), calculateIndex (l + step)))
 		{
 			case 0:
 				{
-					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+					scrn.setArrayElement(0, calculateIndex(b), calculateIndex (l));
 					l += step;
 					r += step;
-					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+					scrn.setArrayElement(3, calculateIndex(b),calculateIndex (l));
 				}
 				break;
 			case 1:
@@ -74,14 +73,14 @@ public:
 	}
 	void MoveU (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr[calculateIndex(b+step)][calculateIndex (l)])
+		switch (scrn.getArrayElement(calculateIndex(b+step), calculateIndex (l)))
 		{
 		case 0:
 			{
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex (l));
 				b += step;
 				t += step;
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+				scrn.setArrayElement(3, calculateIndex(b), calculateIndex (l));
 			}
 				break;
 		case 1:
@@ -102,14 +101,14 @@ public:
 	}
 	void MoveD (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr[calculateIndex(b-step)][calculateIndex (l)])
+		switch (scrn.getArrayElement(calculateIndex(b-step),calculateIndex (l)))
 		{
 		case 0:
 			{
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex (l));
 				b -= step;
 				t -= step;
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+				scrn.setArrayElement(3, calculateIndex(b), calculateIndex (l));
 			}
 			break;
 		case 1:

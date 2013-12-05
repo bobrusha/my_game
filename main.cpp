@@ -152,78 +152,103 @@ void keyboardFunc()
 				}
 }
 
-void bomb::damage()
+void bomb::damage(sf::RenderWindow& window, sf::Sprite& sprFire)
 {
-	if (scrn.arr[calculateIndex(b)][calculateIndex(l)+1] != 4)
+
+	if (scrn.getArrayElement(calculateIndex(b),calculateIndex(l)+1) != 4)
 	{
 		for (int i=0; i <= dst; ++i)
 		{
-			if (scrn.arr[calculateIndex(b)][calculateIndex(l)+i] == 2)
+			if (scrn.getArrayElement(calculateIndex(b), calculateIndex(l)+i) == 2 )
 			{
-				bricks.remove(brick(l+i*step, r+(i*step), b, t, scrn));
-				scrn.arr[calculateIndex(b)][calculateIndex(l)+i] = 0;
+				if (first)
+				{
+					bricks.remove(brick(l+i*step, r+(i*step), b, t, scrn));
+					scrn.setArrayElement(0, calculateIndex(b), calculateIndex(l)+i);
+				}
 				break;
 			}
-			if (scrn.arr[calculateIndex(b)][calculateIndex(l)+i] == 3)
+			if (scrn.getArrayElement(calculateIndex(b), calculateIndex(l)+i) == 3)
 			{
 				enemies.remove( enemy ( l + i*step, r + i*step, b, t, scrn) );
-				scrn.arr[calculateIndex(b)][calculateIndex(l)+i] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex(l) + i);
 			}
+			sprFire.setPosition(sf::Vector2f(l + i*step, b));
+			window.draw(sprFire);
 		}
 	}
-	if (scrn.arr[calculateIndex(b)][calculateIndex(l)-1] != 4)
+	if (scrn.getArrayElement(calculateIndex(b), calculateIndex(l)-1) != 4)
 	{
 		for (int i=0; i <= dst; ++i)
 		{
-			if (scrn.arr[calculateIndex(b)][calculateIndex(l) - i] == 2)
+			if (scrn.getArrayElement(calculateIndex(b), calculateIndex(l) - i) == 2 && first)
 			{
-				std::cout<<calculateIndex(l) - i<<" "<<r - i*step<<std::endl;
-
-				bricks.remove(brick( l - i*step, r - i*step, b, t, scrn));
-				scrn.arr[calculateIndex(b)][calculateIndex(l) - i] = 0;
+				std::cout<<"I'm here"<<std::endl;
+				if(first)
+				{
+					bricks.remove(brick( l - i*step, r - i*step, b, t, scrn));
+					scrn.setArrayElement(0, calculateIndex(b), calculateIndex(l) - i);
+				}
 				break;
 			}
-			if (scrn.arr[calculateIndex(b)][calculateIndex(l)-i - 1] == 3)
+			if (scrn.getArrayElement(calculateIndex(b), calculateIndex(l) - i - 1) == 3 )
 			{
 				enemies.remove( enemy (l-i*step, r-i*step, b, t, scrn) );
-				scrn.arr[calculateIndex(b)][calculateIndex(l)- i - 1] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex(l) - i - 1);
 			}
+			sprFire.setPosition(sf::Vector2f(l- i*step, b));
+			window.draw(sprFire);
 		}
 	}
-	if (scrn.arr[calculateIndex(b)+1][calculateIndex(l)] != 4)
+	if (scrn.getArrayElement(calculateIndex(b)+1, calculateIndex(l)) != 4 )
 	{
 		for (int i=0; i <= dst; ++i)
 		{
-			if (scrn.arr[calculateIndex(b)+i][calculateIndex(l)] == 2)
+			if (scrn.getArrayElement(calculateIndex(b)+i, calculateIndex(l)) == 2  && first)
 			{
-				bricks.remove(brick(l, r, b+i*step, t+i*step, scrn));
-				scrn.arr[calculateIndex(b)+i][calculateIndex(l)] = 0;
+				if(first)
+				{
+					bricks.remove(brick(l, r, b+i*step, t+i*step, scrn));
+					scrn.setArrayElement(0, calculateIndex(b)+i, calculateIndex(l));
+				}
 				break;
 			}
-			if (scrn.arr[calculateIndex(b)+i][calculateIndex(l)] == 3)
+			if (scrn.getArrayElement(calculateIndex(b)+i, calculateIndex(l)) == 3)
 			{
 				enemies.remove( enemy (l, r, b+i*step, t+i*step, scrn) );
-				scrn.arr[calculateIndex(b)+i][calculateIndex(l)] = 0;
+				scrn.setArrayElement(0, calculateIndex(b)+i, calculateIndex(l));
 			}
+			sprFire.setPosition(sf::Vector2f(l, b+ i*step));
+			window.draw(sprFire);
 		}
 	}
-	if (scrn.arr[calculateIndex(b)-1][calculateIndex(l)] != 4)
+	if (scrn.getArrayElement(calculateIndex(b)-1, calculateIndex(l)) != 4)
 	{
 		for (int i = 0; i <= dst; i++)
 		{
-			if (scrn.arr[calculateIndex(b)-i][calculateIndex(l)] == 2)
+			if (scrn.getArrayElement(calculateIndex(b)-i, calculateIndex(l)) == 2)
 			{
-				bricks.remove(brick (l, r, b-i*step, t-i*step, scrn));
-				scrn.arr[calculateIndex(b)-i][calculateIndex(l)] = 0;
+				if (first)
+				{
+					bricks.remove(brick (l, r, b-i*step, t-i*step, scrn));
+					scrn.setArrayElement(0, calculateIndex(b)-i, calculateIndex(l));
+				}
 				break;
 			}
-			if (scrn.arr[calculateIndex(b)-i][calculateIndex(l)] == 3)
+			if (scrn.getArrayElement(calculateIndex(b)-i, calculateIndex(l)) == 3)
 			{
-				enemies.remove(enemy (l, r, b-i*step, t-i*step, scrn));
-				scrn.arr[calculateIndex(b)-i][calculateIndex(l)] = 0;
+				enemies.remove (enemy (l, r, b-i*step, t-i*step, scrn));
+				scrn.setArrayElement (0, calculateIndex(b)-i, calculateIndex(l));
 			}
+			sprFire.setPosition(sf::Vector2f(l , b - i*step));
+			window.draw(sprFire);
 		}
 	}
+	if (first)
+	{
+		first = false;
+	}
+	return;
 }
 
 list <list<bomb>::iterator> lst_iter;
@@ -314,7 +339,7 @@ void eventsAfterLosing(sf::Event &event, sf::RenderWindow &window, bool &in_menu
 				sf::Vector2i mPos = sf::Mouse::getPosition(window);
 				if ( mPos.x >= 100 && mPos.x <= 200 && mPos.y >= 250 && mPos.y <= 350 )
 				{
-					scrn.run = true;
+					scrn.setRun(true);
 					in_menu = true;
 				}
 
@@ -348,7 +373,6 @@ void youWin (sf::Text & txt, sf::Font & font)
 
 int main ( int argc, char** argv)
 {
-
 	sf::RenderWindow window(sf::VideoMode(wW, wH), "SFML works!", sf::Style::Titlebar);
 
 	sf::Clock clock;
@@ -378,6 +402,11 @@ int main ( int argc, char** argv)
 	texPortal.loadFromFile("portal.png");
 	sf::Sprite sprPortal;
 	sprPortal.setTexture(texPortal);
+
+	sf::Texture texFire;
+	texFire.loadFromFile("fire.png");
+	sf::Sprite sprFire;
+	sprFire.setTexture(texFire);
 
 	sf::Font font;
 	if (!font.loadFromFile("font.ttf"))
@@ -426,7 +455,7 @@ int main ( int argc, char** argv)
 
 		while ( window.pollEvent(event) )
 		{
-			if(scrn.run)
+			if(scrn.getRun())
 			{
 				eventsInGame(event, window);
 			}
@@ -439,7 +468,7 @@ int main ( int argc, char** argv)
 		//--------------------------------------------------------------------------------------------------------------------Draw
 		window.clear(sf::Color::White);
 
-		if (scrn.run == true)
+		if (scrn.getRun() == true)
 		{
 			sprPortal.setPosition(sf::Vector2f(lvlup.l, lvlup.b));
 			window.draw(sprPortal);
@@ -481,8 +510,12 @@ int main ( int argc, char** argv)
 
 						if ( (i->clock).getElapsedTime().asSeconds() >= 3.0)
 						{
-							i->damage();
-							lst_iter.push_back(i);
+							i->damage(window, sprFire);
+							if ( (i->clock).getElapsedTime().asSeconds() > 5.0)
+							{
+								lst_iter.push_back(i);
+							}
+
 						}
 						window.draw(sprBomb);
 					}
@@ -498,7 +531,7 @@ int main ( int argc, char** argv)
 					}
 					else
 					{
-						scrn.run = false; 
+						scrn.setRun(false); 
 					}
 				}
 			}
@@ -508,7 +541,7 @@ int main ( int argc, char** argv)
 				bombs.clear();
 				enemies.clear();
 				scrn.clearScreen();
-				scrn.run = false;
+				scrn.setRun(false);
 
 				sf::Text text;
 

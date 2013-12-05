@@ -11,7 +11,7 @@ public:
 
 	hero (screen &scrn): l (10), r(50), b(370), t(410), lives (2), inportal(false) 
 	{	
-		scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1;
+		scrn.setArrayElement(1,calculateIndex(b),calculateIndex (l));
 	}
 
 	void Damaged()
@@ -21,43 +21,43 @@ public:
 	void MoveL (screen &scrn, portal& quit)
 	{
 		
-		if ( scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 3 )
+		if ( scrn.getArrayElement(calculateIndex(b),calculateIndex (l - step)) == 3 )
 		{
 			youLose(scrn);
 			Damaged();
 		}
 		else
-			if ( scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 0 )
+			if ( scrn.getArrayElement (calculateIndex(b), calculateIndex (l - step)) == 0 )
 			{
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				scrn.setArrayElement (0, calculateIndex(b),calculateIndex (l));
 				l -= step;
 				r -= step;
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
+				scrn.setArrayElement(1, calculateIndex(b), calculateIndex (l)); 
 			}
 			else 
-				if (scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 6 && quit.up == true)
+				if (scrn.getArrayElement(calculateIndex(b), calculateIndex (l - step)) == 6 && quit.up == true)
 				{
 					inportal = true;
 				}
 	}
 	void MoveR (screen &scrn, portal& quit)
 	{
-		if ( scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 3 )
+		if ( scrn.getArrayElement(calculateIndex(b), calculateIndex (l + step)) == 3 )
 		{
 			youLose(scrn);
 			Damaged();
 		}
 		else
 		{
-			if (scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 0)
+			if (scrn.getArrayElement(calculateIndex(b), calculateIndex (l + step)) == 0)
 			{
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex (l));
 				l += step;
 				r += step;
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
+				scrn.setArrayElement(1, calculateIndex(b), calculateIndex (l)); 
 			}
 			else 
-				if (scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 6 && quit.up==true)
+				if (scrn.getArrayElement(calculateIndex(b), calculateIndex (l + step)) == 6 && quit.up==true)
 				{
 					inportal = true;
 				}
@@ -65,51 +65,50 @@ public:
 	}
 	void MoveU (screen &scrn, portal& quit)
 	{
-		if ( scrn.arr[calculateIndex(b - step)][calculateIndex (l)] == 3 )
+		if ( scrn.getArrayElement(calculateIndex(b - step), calculateIndex (l)) == 3 )
 		{
 			youLose(scrn);
 			Damaged();
 		}
 		else
 		{
-			if (scrn.arr[calculateIndex(b - step)][calculateIndex (l)] == 0 )
+			if (scrn.getArrayElement(calculateIndex(b - step), calculateIndex (l)) == 0 )
 			{
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex (l));
 				b -= step;
 				t -= step;
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
+				scrn.setArrayElement(1, calculateIndex(b), calculateIndex (l)); 
 			}
 			else 
-				if (scrn.arr[calculateIndex(b -step)][calculateIndex (l)] == 6 && quit.up==true)
+				if (scrn.getArrayElement(calculateIndex(b -step), calculateIndex (l)) == 6 && quit.up==true)
 				{
-					inportal = true;
+					inportal = true; //проверить а нужно ли это?
 				}
 		}
 	}
 	void MoveD (screen &scrn, portal& quit)
 	{
-		if ( scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 3 )
+		if ( scrn.getArrayElement(calculateIndex(b + step), calculateIndex (l)) == 3 )
 		{
 			youLose(scrn);
 			Damaged();
 		}
 		else
 		{
-			if (scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 0)
+			if (scrn.getArrayElement(calculateIndex(b + step), calculateIndex (l)) == 0)
 			{
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				scrn.setArrayElement(0, calculateIndex(b), calculateIndex (l));
 				b += step;
 				t += step;
-				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
+				scrn.setArrayElement(1, calculateIndex(b), calculateIndex (l)); 
 			}
 			else 
-				if (scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 6 && quit.up==true)
+				if (scrn.getArrayElement(calculateIndex(b + step), calculateIndex (l)) == 6 && quit.up==true)
 				{
 					inportal = true;
 				}
 		}
 	}
-
 };
 
 #endif

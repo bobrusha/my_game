@@ -15,7 +15,7 @@ public:
 		sprite.setTexture(texture);
 		sprite.setPosition(sf::Vector2f(l, b));
 
-		scrn.arr[calculateIndex(b)][calculateIndex (l)] = 2;
+		scrn.setArrayElement (2, calculateIndex(b), calculateIndex (l));
     }
 };
 
@@ -26,26 +26,14 @@ bool operator == (const brick& b1, const brick& b2)
         else 
                 return false;
 }
+
 class portal
 {
 public:
 	int l, r, b, t;
 	bool up;
 	portal(): l(0), r(0), b(0), t(0), up(false){}
-	portal (int _l, int _r, int _b, int _t, screen& scrn):l(_l), r(_r), b(_b), t(_t), up(false)
-	{
-		//scrn.arr[calculateIndex(b)][calculateIndex(l)] = 6;
-	}
-};
-
-class beaton
-{
-        int l, r, b, t;
-public:
-	beaton (int _l,int _r, int _b, int _t, screen& scrn): l(_l), r(_r), b(_b), t(_t)
-	{
-		scrn.arr[calculateIndex (l)][calculateIndex(b)] = 4;
-	}
+	portal (int _l, int _r, int _b, int _t, screen& scrn):l(_l), r(_r), b(_b), t(_t), up(false){}
 };
 
 #endif

@@ -11,25 +11,17 @@ class bomb
 {
 public:
 	int l, r, b, t, dst;
-	bool isburned;
+	bool isburned, first;
 	sf::Clock clock;
 	sf::Time elapsed;
 
 	bomb (): l(0), r(0), b(0), t(0), dst(0){}
-	bomb ( int _l, int _r, int _b, int _t):	l(_l), r(_r), b(_b), t(_t), dst(3), isburned(false)
+	bomb ( int _l, int _r, int _b, int _t):	l(_l), r(_r), b(_b), t(_t), dst(3), isburned(false), first(true)
 	{
-	/* Does'nt work! :(
-		sf::Texture texture;
-		texture.loadFromFile("bomb.png");
-		sprite.setTexture(texture);
-	*/
 		i = 0;
-
 		elapsed = clock.restart();
-		//timer!!
 	}
-
-	void damage ();
+	void damage (sf::RenderWindow&, sf::Sprite&);
 };
 
 bool operator == (const bomb& x1, const bomb& x2)
