@@ -7,8 +7,9 @@ using namespace std;
 
 //global variables------
 int wW = 540, wH = 460;
-int border = 20;
-int maxsteps = ((wW - border)/ step);
+const int border = 20;
+const int maxsteps = ((wW - border)/ step);
+const int max_num_lvls = 4;
 
 unsigned int textures[30];
 unsigned int NUM_LVL = 0;
@@ -39,7 +40,7 @@ int calculateCoordinates (int x)
 }
 //-----------------------
 
-int lvls[2][13][15] =
+int lvls[max_num_lvls][13][15] =
 {
 	{
 		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
@@ -63,12 +64,42 @@ int lvls[2][13][15] =
 		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4 },
 		{ 4, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 4 },
 		{ 4, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 4 },
-		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 4 },
 		{ 4, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4 },
 		{ 4, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 4 },
 		{ 4, 0, 0, 2, 0, 0, 3, 2, 0, 0, 2, 2, 0, 0, 4 },
 		{ 4, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
 		{ 4, 0, 0, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0, 3, 4 },
+		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }
+	},
+	{
+		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
+		{ 4, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 0, 0, 2, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 4 },
+		{ 4, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 4 },
+		{ 4, 0, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 4 },
+		{ 4, 0, 2, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 2, 0, 4 },
+		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }
+	},
+	{
+		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
+		{ 4, 0, 0, 0, 0, 2, 0, 2, 2, 0, 0, 0, 0, 2, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 4 },
+		{ 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4 },
+		{ 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 4 },
+		{ 4, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4 },
+		{ 4, 2, 2, 0, 2, 2, 2, 0, 2, 0, 2, 0, 2, 2, 4 },
 		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }
 	}
 };
@@ -100,6 +131,7 @@ void createLevel ()
 			}
 		}
 		cout<<"I created level"<<endl;
+
 		lvlup = portal (10, 50, 410, 450, scrn);
 		Main = hero (scrn);
 }
@@ -121,37 +153,6 @@ void boom (int);
 void enemyMotion(int);
 */
 //-----------------------------------
-void keyboardFunc()
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		Main.MoveL(scrn, lvlup);
-			
-	}
-	else
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			std::cout<<"I'm right!"<<std::endl;
-			Main.MoveR(scrn, lvlup);
-		}
-		else 
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				Main.MoveD(scrn, lvlup);
-			}
-			else 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-				{
-					std::cout<<"I'm Down!"<<std::endl;
-					Main.MoveU(scrn, lvlup);
-		
-				}
-				else
-				{
-					//std::cout<<"I'm i last else!!"<<std::endl;
-				}
-}
-
 void bomb::damage(sf::RenderWindow& window, sf::Sprite& sprFire)
 {
 
@@ -183,7 +184,6 @@ void bomb::damage(sf::RenderWindow& window, sf::Sprite& sprFire)
 		{
 			if (scrn.getArrayElement(calculateIndex(b), calculateIndex(l) - i) == 2 && first)
 			{
-				std::cout<<"I'm here"<<std::endl;
 				if(first)
 				{
 					bricks.remove(brick( l - i*step, r - i*step, b, t, scrn));
@@ -317,6 +317,11 @@ void eventsInGame(sf::Event &event, sf::RenderWindow &window)
 				scrn.print();
 			}
 			break;
+			case (sf::Keyboard::Escape):
+				{
+					window.close();
+				}
+			break;
 			case (sf::Keyboard::A):
 			{
 				//NUM_LVL++;
@@ -344,6 +349,29 @@ void eventsAfterLosing(sf::Event &event, sf::RenderWindow &window, bool &in_menu
 				}
 
 				if ( mPos.x >= 250 && mPos.x <= 350 && mPos.y >= 250 && mPos.y <= 300 )
+				{
+					window.close();
+				}
+			}
+		}
+	}
+}
+void eventsAfterWin(sf::Event &event, sf::RenderWindow &window, bool &in_menu, int x1, int y1, int x2, int y2)
+{
+	switch(event.type)
+	{
+	case sf::Event::MouseButtonPressed:
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				sf::Vector2i mPos = sf::Mouse::getPosition(window);
+				if ( mPos.x >= x1 && mPos.x <= x1 + 100 && mPos.y >= y1 && mPos.y <= y1 + 100 )
+				{
+					scrn.setRun(true);
+					in_menu = true;
+				}
+
+				if ( mPos.x >= x2 && mPos.x <= x2 + 100 && mPos.y >= y2 && mPos.y <= y2 + 100)
 				{
 					window.close();
 				}
@@ -416,7 +444,7 @@ int main ( int argc, char** argv)
 	//-----------------------------------------------------------------------------------------------Boolean variables	
 	bool lvl_is_completed = false;
 	bool in_menu = true;
-
+	bool gamer_lose = false;
 	// -----------------------------------------------------------------------------------------------Game
 	while (window.isOpen())
     {
@@ -425,7 +453,6 @@ int main ( int argc, char** argv)
 		while ( in_menu)
 		{
 			window.clear(sf::Color::White);
-			//std::cout<<"I'm here!"<<std::endl;
 
 			sf::Text txt1, txt2;
 			const int txt1_x = 100, txt1_y=100;
@@ -461,7 +488,14 @@ int main ( int argc, char** argv)
 			}
 			else
 			{
-				eventsAfterLosing(event, window, in_menu);
+				if(gamer_lose)
+				{
+					eventsAfterLosing (event, window, in_menu);
+				}
+				else
+				{
+					eventsAfterWin (event, window, in_menu, 100, 150, 100, 250);
+				}
 			}
 		}
 
@@ -503,7 +537,6 @@ int main ( int argc, char** argv)
 				}
 				if ( !bombs.empty())
 				{
-					std::cout<<bombs.size()<<endl;
 					for (list<bomb>::iterator i = bombs.begin(); i != bombs.end(); ++i)
 					{
 						sprBomb.setPosition(sf::Vector2f(i->l, i->b));
@@ -520,12 +553,12 @@ int main ( int argc, char** argv)
 						window.draw(sprBomb);
 					}
 				}
-				sprMainHero.setPosition(sf::Vector2f(Main.l, Main.b));
-				window.draw(sprMainHero);
+				sprMainHero.setPosition (sf::Vector2f (Main.l, Main.b));
+				window.draw (sprMainHero);
 
 				if ( enemies.empty() && Main.b == lvlup.b && Main.r ==lvlup.r)
 				{
-					if( NUM_LVL<= 2)
+					if ( NUM_LVL < max_num_lvls - 1)
 					{
 						levelUp();
 					}
@@ -543,17 +576,22 @@ int main ( int argc, char** argv)
 				scrn.clearScreen();
 				scrn.setRun(false);
 
-				sf::Text text;
+				sf::Text txt1, txt2, txt3, txt4;
 
-				if(NUM_LVL > 2)
+				if ( NUM_LVL == max_num_lvls - 1)
 				{
-					std::cout<<"NUM_LVL > 2"<<std::endl;
-					youWin(text, font);
-					window.draw(text);
+					getText(txt1, font, "You Win!!", 100, 50, 72);
+					window.draw(txt1);
+
+					getText(txt2, font, "Back in menu", 100, 150, 72);
+					window.draw(txt2);
+
+					getText(txt3, font, "Exit", 100, 250, 72);
+					window.draw(txt3);
 				}
 				else
 				{
-					sf::Text txt1, txt2, txt3, txt4;
+					std::cout<<NUM_LVL<<std::endl;
 
 					getText(txt1, font, "You lose", 100, 50, 72);
 					window.draw(txt1);
@@ -573,7 +611,6 @@ int main ( int argc, char** argv)
 			
 			if ( bombs.size() != 0)
 			{ 
-				std::cout<<bombs.size();
 				for (list<list<bomb>::iterator>::iterator i = lst_iter.begin(); i != lst_iter.end(); ++i)
 				{
 					bombs.remove( *(*i));
