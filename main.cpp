@@ -1,6 +1,4 @@
-#include <vector>
 #include <list>
-
 #include "bomb.h"
 #include "block.h"
 using namespace std;
@@ -78,13 +76,13 @@ int lvls[max_num_lvls][13][15] =
 		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
 		{ 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 4 },
 		{ 4, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 4 },
-		{ 4, 0, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 4 },
+		{ 4, 0, 2, 3, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 4 },
 		{ 4, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
-		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 2, 0, 0, 4 },
 		{ 4, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 4 },
 		{ 4, 0, 2, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
 		{ 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
-		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 2, 0, 4 },
+		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 2, 0, 4 },
 		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }
 	},
 	{
@@ -95,10 +93,10 @@ int lvls[max_num_lvls][13][15] =
 		{ 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4 },
 		{ 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 4 },
 		{ 4, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4 },
-		{ 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4 },
 		{ 4, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 4 },
-		{ 4, 2, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 4 },
-		{ 4, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4 },
+		{ 4, 2, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 4 },
+		{ 4, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 3, 0, 4 },
 		{ 4, 2, 2, 0, 2, 2, 2, 0, 2, 0, 2, 0, 2, 2, 4 },
 		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }
 	}
@@ -130,7 +128,6 @@ void createLevel ()
 				}
 			}
 		}
-		cout<<"I created level"<<endl;
 
 		lvlup = portal (10, 50, 410, 450, scrn);
 		Main = hero (scrn);
@@ -267,13 +264,13 @@ void eventsInMenu (sf::Event &event, sf::RenderWindow &window, bool & in_menu, i
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				sf::Vector2i mPos = sf::Mouse::getPosition(window);
-				if ( mPos.x >= txt1_x && mPos.x <= (txt1_x+100) && mPos.y >= txt1_y && mPos.y <= (txt1_y+100) )
+				if ( mPos.x >= txt1_x && mPos.x <= (500) && mPos.y >= txt1_y && mPos.y <= (txt1_y+100) )
 				{
 					in_menu = false;
 					startNewGame();
 				}
 
-				if ( mPos.x >= txt2_x && mPos.x <= (txt2_x+100) && mPos.y >= txt2_y && mPos.y <= (txt2_y+100) )
+				if ( mPos.x >= txt2_x && mPos.x <= (500) && mPos.y >= txt2_y && mPos.y <= (txt2_y+100) )
 				{
 					window.close();
 				}
@@ -326,6 +323,7 @@ void eventsInGame(sf::Event &event, sf::RenderWindow &window)
 			{
 				//NUM_LVL++;
 				enemies.clear();
+				//scrn.clearScreen();
 			}
 			break;
 			}
@@ -365,13 +363,13 @@ void eventsAfterWin(sf::Event &event, sf::RenderWindow &window, bool &in_menu, i
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				sf::Vector2i mPos = sf::Mouse::getPosition(window);
-				if ( mPos.x >= x1 && mPos.x <= x1 + 100 && mPos.y >= y1 && mPos.y <= y1 + 100 )
+				if ( mPos.x >= x1 && mPos.x <= 500 && mPos.y >= y1 && mPos.y <= y1 + 100 )
 				{
 					scrn.setRun(true);
 					in_menu = true;
 				}
 
-				if ( mPos.x >= x2 && mPos.x <= x2 + 100 && mPos.y >= y2 && mPos.y <= y2 + 100)
+				if ( mPos.x >= x2 && mPos.x <= 500 && mPos.y >= y2 && mPos.y <= y2 + 100)
 				{
 					window.close();
 				}
@@ -401,11 +399,12 @@ void youWin (sf::Text & txt, sf::Font & font)
 
 int main ( int argc, char** argv)
 {
-	sf::RenderWindow window(sf::VideoMode(wW, wH), "SFML works!", sf::Style::Titlebar);
+	sf::RenderWindow window(sf::VideoMode(wW, wH), "MyDynablaster", sf::Style::Titlebar);
 
 	sf::Clock clock;
 
 	//==================================================================================================== Textures for objects
+	
 	sf::Texture texMainHero;
 	texMainHero.loadFromFile("main_hero.png");
 	sf::Sprite sprMainHero;
@@ -441,6 +440,8 @@ int main ( int argc, char** argv)
 	{
 		return 3;
    	}
+
+	
 	//-----------------------------------------------------------------------------------------------Boolean variables	
 	bool lvl_is_completed = false;
 	bool in_menu = true;
@@ -558,12 +559,14 @@ int main ( int argc, char** argv)
 
 				if ( enemies.empty() && Main.b == lvlup.b && Main.r ==lvlup.r)
 				{
-					if ( NUM_LVL < max_num_lvls - 1)
+					std::cout<<NUM_LVL<<std::endl;
+					if ( NUM_LVL < max_num_lvls -1)
 					{
 						levelUp();
 					}
 					else
 					{
+						std::cout<<"I'm here"<< std::endl;
 						scrn.setRun(false); 
 					}
 				}
@@ -578,7 +581,7 @@ int main ( int argc, char** argv)
 
 				sf::Text txt1, txt2, txt3, txt4;
 
-				if ( NUM_LVL == max_num_lvls - 1)
+				if ( NUM_LVL >= max_num_lvls - 1)
 				{
 					getText(txt1, font, "You Win!!", 100, 50, 72);
 					window.draw(txt1);
@@ -591,7 +594,7 @@ int main ( int argc, char** argv)
 				}
 				else
 				{
-					std::cout<<NUM_LVL<<std::endl;
+					gamer_lose = true;
 
 					getText(txt1, font, "You lose", 100, 50, 72);
 					window.draw(txt1);
